@@ -8,8 +8,7 @@ BENCH_RUNS=spook_bench_set
 
 export PROC_FREQ=2.0 # Processor frequency (GHz)
 
-#N_ITER=100000000
-N_ITER=1000000
+N_ITER=100000000
 
 rm -rf $BENCH_DIR
 mkdir -p $BENCH_DIR
