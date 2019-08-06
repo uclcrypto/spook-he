@@ -1,0 +1,129 @@
+Intel(R) Architecture Code Analyzer Version -  v3.0-28-g1ba2cbb build date: 2017-10-23;16:42:45
+Analyzed File -  ./../prim_bench_iaca/shadow_256bit-haswell-iaca.o
+Binary Format - 64Bit
+Architecture  -  SKX
+Analysis Type - Throughput
+
+Throughput Analysis Report
+--------------------------
+Block Throughput: 49.26 Cycles       Throughput Bottleneck: Backend
+Loop Count:  22
+Port Binding In Cycles Per Iteration:
+--------------------------------------------------------------------------------------------------
+|  Port  |   0   -  DV   |   1   |   2   -  D    |   3   -  D    |   4   |   5   |   6   |   7   |
+--------------------------------------------------------------------------------------------------
+| Cycles | 28.6     0.0  | 28.7  |  2.0     2.0  |  2.0     2.0  |  0.0  | 28.7  |  1.0  |  0.0  |
+--------------------------------------------------------------------------------------------------
+
+DV - Divider pipe (on port 0)
+D - Data fetch pipe (on ports 2 and 3)
+F - Macro Fusion with the previous instruction occurred
+* - instruction micro-ops not bound to a port
+^ - Micro Fusion occurred
+# - ESP Tracking sync uop was issued
+@ - SSE instruction followed an AVX256/AVX512 instruction, dozens of cycles penalty is expected
+X - instruction not supported, was not accounted in Analysis
+
+| Num Of   |                    Ports pressure in cycles                         |      |
+|  Uops    |  0  - DV    |  1   |  2  -  D    |  3  -  D    |  4   |  5   |  6   |  7   |
+-----------------------------------------------------------------------------------------
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm3, xmm0
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm4, xmm2
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti128 xmm1, ymm2, 0x1
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti128 xmm0, ymm0, 0x1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpand xmm2, xmm3, xmm2
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor xmm2, xmm2, xmm1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpand xmm1, xmm0, xmm4
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor xmm1, xmm1, xmm3
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm3, xmm1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpand xmm1, xmm2, xmm1
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor xmm1, xmm1, xmm0
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpand xmm0, xmm0, xmm2
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti128 ymm1, ymm3, xmm1, 0x1
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor xmm0, xmm0, xmm4
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm3, xmm2
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti128 ymm0, ymm3, xmm0, 0x1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpslld ymm2, ymm1, 0x14
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpsrld ymm3, ymm1, 0xc
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpslld ymm4, ymm0, 0x14
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpor ymm3, ymm3, ymm2
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpsrld ymm2, ymm0, 0xc
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor ymm3, ymm3, ymm1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpor ymm2, ymm2, ymm4
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor ymm2, ymm2, ymm0
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpsrld ymm4, ymm3, 0x3
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpslld ymm5, ymm3, 0x1d
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm5, ymm5, ymm4
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpslld ymm6, ymm2, 0x1d
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpsrld ymm4, ymm2, 0x3
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm6, ymm6, ymm4
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpslld ymm4, ymm1, 0xf
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpsrld ymm1, ymm1, 0x11
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm1, ymm4, ymm1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpslld ymm4, ymm0, 0xf
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpsrld ymm0, ymm0, 0x11
+|   1      |             |      |             |             |      | 1.0  |      |      | vpxor ymm3, ymm1, ymm3
+|   1      | 0.3         | 0.4  |             |             |      | 0.3  |      |      | vpor ymm0, ymm4, ymm0
+|   1      | 0.3         | 0.3  |             |             |      | 0.4  |      |      | vpxor ymm5, ymm5, ymm3
+|   1      | 0.4         | 0.3  |             |             |      | 0.3  |      |      | vpxor ymm2, ymm0, ymm2
+|   1      | 0.3         | 0.4  |             |             |      | 0.3  |      |      | vpxor ymm2, ymm6, ymm2
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpsrld ymm1, ymm5, 0x1f
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpslld ymm4, ymm5, 0x1
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm4, ymm4, ymm1
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpslld ymm3, ymm2, 0x1
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpsrld ymm1, ymm2, 0x1f
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm3, ymm3, ymm1
+|   1      | 0.3         | 0.3  |             |             |      | 0.4  |      |      | vpxor ymm3, ymm3, ymm2
+|   1      | 0.4         | 0.3  |             |             |      | 0.3  |      |      | vpxor ymm4, ymm4, ymm5
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpsrld ymm1, ymm3, 0x1a
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpslld ymm0, ymm3, 0x6
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm0, ymm0, ymm1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpsrld ymm6, ymm4, 0xf
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpslld ymm1, ymm4, 0x11
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm6, ymm6, ymm1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpslld ymm1, ymm4, 0x7
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpsrld ymm4, ymm4, 0x19
+|   1      |             |      |             |             |      | 1.0  |      |      | vpor ymm1, ymm1, ymm4
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpsrld ymm4, ymm3, 0xf
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpslld ymm3, ymm3, 0x11
+|   2^     |             |      | 1.0     1.0 |             |      | 1.0  |      |      | vpxor ymm5, ymm5, ymmword ptr [rax]
+|   1      | 0.3         | 0.4  |             |             |      | 0.3  |      |      | vpor ymm3, ymm4, ymm3
+|   2^     | 0.3         | 0.3  |             | 1.0     1.0 |      | 0.4  |      |      | vpxor ymm2, ymm2, ymmword ptr [rax+0x20]
+|   1      | 0.4         | 0.3  |             |             |      | 0.3  |      |      | vpxor ymm1, ymm1, ymm3
+|   1      | 0.3         | 0.4  |             |             |      | 0.3  |      |      | vpxor ymm0, ymm0, ymm6
+|   1      | 0.3         | 0.3  |             |             |      | 0.4  |      |      | vpxor ymm1, ymm1, ymm2
+|   1      | 0.4         | 0.3  |             |             |      | 0.3  |      |      | vpxor ymm0, ymm0, ymm5
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm5, xmm0
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm4, xmm1
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti128 xmm1, ymm1, 0x1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpand xmm2, xmm4, xmm5
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpand xmm3, xmm1, xmm5
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti128 xmm0, ymm0, 0x1
+|   1      | 0.6         | 0.4  |             |             |      |      |      |      | vpxor xmm0, xmm2, xmm0
+|   1      | 0.4         | 0.6  |             |             |      |      |      |      | vpxor xmm3, xmm3, xmm4
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm4, xmm3
+|   1      | 0.3         | 0.4  |             |             |      | 0.3  |      |      | vpand xmm3, xmm0, xmm3
+|   1      | 0.3         | 0.3  |             |             |      | 0.4  |      |      | vpxor xmm3, xmm3, xmm1
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti128 ymm4, ymm4, xmm3, 0x1
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpand xmm1, xmm1, xmm0
+|   1*     |             |      |             |             |      |      |      |      | vmovdqa xmm3, xmm0
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd ymm2, ymm4, 0xbf
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpxor xmm1, xmm1, xmm5
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti128 ymm1, ymm3, xmm1, 0x1
+|   2^     | 0.7         | 0.3  | 1.0     1.0 |             |      |      |      |      | vpxor ymm0, ymm2, ymmword ptr [rax+0x40]
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd ymm3, ymm4, 0x5a
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd ymm2, ymm4, 0x1
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpxor ymm3, ymm2, ymm3
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpxor ymm2, ymm0, ymm3
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd ymm0, ymm1, 0x1
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd ymm3, ymm1, 0x5a
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd ymm1, ymm1, 0xbf
+|   2^     | 0.3         | 0.7  |             | 1.0     1.0 |      |      |      |      | vpxor ymm1, ymm1, ymmword ptr [rax+0x60]
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpxor ymm0, ymm0, ymm3
+|   1      |             |      |             |             |      |      | 1.0  |      | sub rax, 0xffffffffffffff80
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpxor ymm0, ymm0, ymm1
+|   1*     |             |      |             |             |      |      |      |      | cmp rdx, rax
+|   0*F    |             |      |             |             |      |      |      |      | jnz 0xfffffffffffffe48
+Total Num Of Uops: 100
+Analysis Notes:
+Backend allocation was stalled due to unavailable allocation resources.

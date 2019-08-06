@@ -1,0 +1,7 @@
+max throughput (cycles/byte):
+
+ | |x86-64|haswell|skylake-avx512|
+|-|-|-|-|
+|clyde_32bit-shadow_128bit|12.70|12.88|10.06|
+|clyde_32bit-shadow_32bit|159.56|100.98|11.33|
+|clyde_64bit-shadow_128bit| |12.87|10.06| 

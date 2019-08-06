@@ -1,0 +1,14 @@
+clyde_32bit-haswell-bench 141.7
+clyde_32bit-skylake-avx512-bench 141.6
+clyde_32bit-x86-64-bench 158.6
+clyde_64bit-haswell-bench 135.5
+clyde_64bit-skylake-avx512-bench 135.7
+shadow_128bit-haswell-bench 198.3
+shadow_128bit-skylake-avx512-bench 152.2
+shadow_128bit-x86-64-bench 204.4
+shadow_256bit-haswell-bench 216.1
+shadow_256bit-skylake-avx512-bench 156.2
+shadow_32bit-haswell-bench 228.3
+shadow_32bit-skylake-avx512-bench 171.2
+shadow_32bit-x86-64-bench 452.2
+shadow_512bit-skylake-avx512-bench 227.1

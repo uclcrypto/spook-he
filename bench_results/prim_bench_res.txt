@@ -1,0 +1,31 @@
+clyde iaca:
+
+ | |x86-64|haswell|skylake-avx512|
+|-|-|-|-|
+|clyde_32bit|372.66|252.30|252.30|
+|clyde_64bit| |210.00|210.00| 
+
+clyde real:
+
+ | |x86-64|haswell|skylake-avx512|
+|-|-|-|-|
+|clyde_32bit|317.20|283.40|283.20|
+|clyde_64bit| |271.00|271.40| 
+
+shadow iaca:
+
+ | |x86-64|haswell|skylake-avx512|
+|-|-|-|-|
+|shadow_128bit|325.92|333.78|225.78|
+|shadow_256bit| |295.56|242.22|
+|shadow_32bit| | | |
+|shadow_512bit| | |192.00| 
+
+shadow real:
+
+ | |x86-64|haswell|skylake-avx512|
+|-|-|-|-|
+|shadow_128bit|408.80|396.60|304.40|
+|shadow_256bit| |432.20|312.40|
+|shadow_32bit|904.40|456.60|342.40|
+|shadow_512bit| | |454.20| 

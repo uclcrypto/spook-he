@@ -1,0 +1,11 @@
+clyde_32bit-haswell-iaca 42.05
+clyde_32bit-skylake-avx512-iaca 42.05
+clyde_32bit-x86-64-iaca 62.11
+clyde_64bit-haswell-iaca 35.00
+clyde_64bit-skylake-avx512-iaca 35.00
+shadow_128bit-haswell-iaca 55.63
+shadow_128bit-skylake-avx512-iaca 37.63
+shadow_128bit-x86-64-iaca 54.32
+shadow_256bit-haswell-iaca 49.26
+shadow_256bit-skylake-avx512-iaca 40.37
+shadow_512bit-skylake-avx512-iaca 32.00

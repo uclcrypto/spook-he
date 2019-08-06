@@ -1,0 +1,226 @@
+Intel(R) Architecture Code Analyzer Version -  v3.0-28-g1ba2cbb build date: 2017-10-23;16:42:45
+Analyzed File -  ./../prim_bench_iaca/clyde_32bit-x86-64-iaca.o
+Binary Format - 64Bit
+Architecture  -  SKX
+Analysis Type - Throughput
+
+Throughput Analysis Report
+--------------------------
+Block Throughput: 62.11 Cycles       Throughput Bottleneck: FrontEnd
+Loop Count:  22
+Port Binding In Cycles Per Iteration:
+--------------------------------------------------------------------------------------------------
+|  Port  |   0   -  DV   |   1   |   2   -  D    |   3   -  D    |   4   |   5   |   6   |   7   |
+--------------------------------------------------------------------------------------------------
+| Cycles | 49.0     0.0  | 41.5  |  9.0     9.0  |  9.0     8.0  |  5.0  | 41.5  | 49.0  |  4.0  |
+--------------------------------------------------------------------------------------------------
+
+DV - Divider pipe (on port 0)
+D - Data fetch pipe (on ports 2 and 3)
+F - Macro Fusion with the previous instruction occurred
+* - instruction micro-ops not bound to a port
+^ - Micro Fusion occurred
+# - ESP Tracking sync uop was issued
+@ - SSE instruction followed an AVX256/AVX512 instruction, dozens of cycles penalty is expected
+X - instruction not supported, was not accounted in Analysis
+
+| Num Of   |                    Ports pressure in cycles                         |      |
+|  Uops    |  0  - DV    |  1   |  2  -  D    |  3  -  D    |  4   |  5   |  6   |  7   |
+-----------------------------------------------------------------------------------------
+|   1      |             |      | 1.0     1.0 |             |      |      |      |      | mov r8d, dword ptr [rdi]
+|   1      |             |      |             | 1.0     1.0 |      |      |      |      | mov esi, dword ptr [rdi+0x4]
+|   1*     |             |      |             |             |      |      |      |      | mov edx, r8d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and edx, esi
+|   2^     |             | 0.5  | 1.0     1.0 |             |      | 0.5  |      |      | xor edx, dword ptr [rdi+0x8]
+|   1      |             |      |             | 1.0     1.0 |      |      |      |      | mov eax, dword ptr [rdi+0xc]
+|   1*     |             |      |             |             |      |      |      |      | mov r9d, r8d
+|   1*     |             |      |             |             |      |      |      |      | mov r11d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and r9d, eax
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and r11d, eax
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor esi, r9d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r11d, r8d
+|   1*     |             |      |             |             |      |      |      |      | mov ebx, edx
+|   1*     |             |      |             |             |      |      |      |      | mov r8d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and ebx, esi
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r8d, 0xc
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor ebx, eax
+|   1*     |             |      |             |             |      |      |      |      | mov r9d, esi
+|   1*     |             |      |             |             |      |      |      |      | mov eax, r8d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, edx
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r9d, 0xc
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol edx, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, esi
+|   1*     |             |      |             |             |      |      |      |      | mov r8d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r8d, eax
+|   1*     |             |      |             |             |      |      |      |      | mov ebp, r9d
+|   1*     |             |      |             |             |      |      |      |      | mov r14d, eax
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol esi, 0xf
+|   1*     |             |      |             |             |      |      |      |      | mov eax, ebx
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror ebp, 0x3
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r14d, 0x3
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor esi, r9d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror eax, 0xc
+|   1*     |             |      |             |             |      |      |      |      | mov r10d, r11d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor esi, ebp
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r8d, r14d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, ebx
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r10d, 0xc
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r10d, r11d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol ebx, 0xf
+|   1*     |             |      |             |             |      |      |      |      | mov r9d, esi
+|   1*     |             |      |             |             |      |      |      |      | mov r14d, r8d
+|   1*     |             |      |             |             |      |      |      |      | mov r13d, eax
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r9d, 0x1
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, ebx
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r14d, 0x1
+|   1*     |             |      |             |             |      |      |      |      | mov r12d, r10d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r13d, 0x3
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, esi
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r14d, r8d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r12d, 0x3
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r13d, eax
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r11d, 0xf
+|   1*     |             |      |             |             |      |      |      |      | mov ebp, r10d
+|   1*     |             |      |             |             |      |      |      |      | mov r10d, r11d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r10d, ebp
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r10d, r12d
+|   1*     |             |      |             |             |      |      |      |      | mov eax, r13d
+|   1*     |             |      |             |             |      |      |      |      | mov edx, r10d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol eax, 0x1
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol edx, 0x1
+|   1*     |             |      |             |             |      |      |      |      | mov ebp, r14d
+|   1*     |             |      |             |             |      |      |      |      | mov r11d, r9d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r14d, 0xf
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r9d, 0x7
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, r13d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor edx, r10d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, r14d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r11d, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r8d, r9d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol ebp, 0x6
+|   1*     |             |      |             |             |      |      |      |      | mov r9d, eax
+|   1*     |             |      |             |             |      |      |      |      | mov r12d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor ebp, r11d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r12d, 0xf
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r9d, 0x7
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor esi, ebp
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, r12d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol edx, 0x6
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror eax, 0xf
+|   2^     |             | 0.5  | 1.0     1.0 |             |      | 0.5  |      |      | xor esi, dword ptr [rcx]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, r10d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, edx
+|   2^     |             | 0.5  |             | 1.0     1.0 |      | 0.5  |      |      | xor r8d, dword ptr [rcx+0x4]
+|   2^     |             | 0.5  | 1.0     1.0 |             |      | 0.5  |      |      | xor r9d, dword ptr [rcx+0xc]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, r13d
+|   1*     |             |      |             |             |      |      |      |      | mov edx, esi
+|   1*     |             |      |             |             |      |      |      |      | mov r13d, esi
+|   2^     |             | 0.5  |             | 1.0     1.0 |      | 0.5  |      |      | xor eax, dword ptr [rcx+0x8]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and r13d, r8d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and edx, r9d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor edx, r8d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, r13d
+|   1*     |             |      |             |             |      |      |      |      | mov ebp, r9d
+|   1*     |             |      |             |             |      |      |      |      | mov r12d, eax
+|   1*     |             |      |             |             |      |      |      |      | mov r14d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and ebp, eax
+|   1*     |             |      |             |             |      |      |      |      | mov r13d, eax
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | and r12d, edx
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r14d, 0xc
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r14d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, r12d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r13d, 0xc
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r13d, eax
+|   1*     |             |      |             |             |      |      |      |      | mov r10d, r14d
+|   1*     |             |      |             |             |      |      |      |      | mov r12d, r9d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor esi, ebp
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r10d, 0x3
+|   1*     |             |      |             |             |      |      |      |      | mov r8d, r13d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol edx, 0xf
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol eax, 0xf
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r12d, 0xc
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r12d, r9d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor edx, r14d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, r13d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r8d, 0x3
+|   1*     |             |      |             |             |      |      |      |      | mov r14d, r10d
+|   1*     |             |      |             |             |      |      |      |      | mov r10d, esi
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r8d, eax
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r10d, 0xc
+|   1*     |             |      |             |             |      |      |      |      | mov eax, r12d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r9d, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r14d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r10d, esi
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, r12d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror eax, 0x3
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor eax, r9d
+|   1*     |             |      |             |             |      |      |      |      | mov ebx, r14d
+|   1*     |             |      |             |             |      |      |      |      | mov r11d, r8d
+|   1*     |             |      |             |             |      |      |      |      | mov ebp, r10d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol esi, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor esi, r10d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol ebx, 0x1
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r11d, 0x1
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror ebp, 0x3
+|   1*     |             |      |             |             |      |      |      |      | mov r10d, eax
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor ebp, esi
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor ebx, r14d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r11d, r8d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r10d, 0x1
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r10d, eax
+|   1*     |             |      |             |             |      |      |      |      | mov r12d, eax
+|   1      |             |      | 1.0     1.0 |             |      |      |      |      | mov eax, dword ptr [rcx+0x1c]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | inc r15d
+|   2^     |             |      |             | 1.0         | 1.0  |      |      |      | mov dword ptr [rsp-0x3c], eax
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | mov eax, 0xaaaaaaab
+|   2      |             | 1.0  |             |             |      | 1.0  |      |      | mul r15d
+|   1*     |             |      |             |             |      |      |      |      | mov r13d, r8d
+|   1      |             |      | 1.0     1.0 |             |      |      |      |      | mov r8d, dword ptr [rcx+0x14]
+|   1      | 1.0         |      |             |             |      |      |      |      | shr edx, 0x1
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | lea eax, ptr [rdx+rdx*2]
+|   1*     |             |      |             |             |      |      |      |      | mov edx, r15d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | sub edx, eax
+|   1*     |             |      |             |             |      |      |      |      | mov rax, rdx
+|   1      |             |      |             | 1.0     1.0 |      |      |      |      | mov edx, dword ptr [rcx+0x10]
+|   1      |             |      |             |             |      |      | 1.0  |      | shl rax, 0x4
+|   2      |             | 0.5  | 1.0     1.0 |             |      | 0.5  |      |      | xor edx, dword ptr [rsp+rax*1-0x38]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor edx, r14d
+|   1*     |             |      |             |             |      |      |      |      | mov r14d, r11d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r14d, 0x6
+|   2      |             | 0.5  |             | 1.0     1.0 |      | 0.5  |      |      | xor r8d, dword ptr [rsp+rax*1-0x34]
+|   1      |             |      | 1.0     1.0 |             |      |      |      |      | mov esi, dword ptr [rcx+0x18]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r14d, edx
+|   1*     |             |      |             |             |      |      |      |      | mov r9d, ebp
+|   1*     |             |      |             |             |      |      |      |      | mov edx, ebx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r13d, r8d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol ebx, 0x7
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor ebx, r13d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r9d, 0x1
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r11d, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, ebp
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r11d, ebx
+|   2      |             | 0.5  |             | 1.0     1.0 |      | 0.5  |      |      | xor esi, dword ptr [rsp+rax*1-0x30]
+|   1      |             |      | 1.0     1.0 |             |      |      |      |      | mov ebx, dword ptr [rsp-0x3c]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r12d, esi
+|   1*     |             |      |             |             |      |      |      |      | mov esi, r9d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol esi, 0x6
+|   2      |             | 0.5  |             | 1.0     1.0 |      | 0.5  |      |      | xor ebx, dword ptr [rsp+rax*1-0x2c]
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r12d, esi
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor ebp, ebx
+|   1*     |             |      |             |             |      |      |      |      | mov esi, r10d
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | rol r10d, 0x7
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror edx, 0xf
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror esi, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r10d, ebp
+|   2      | 1.0         |      |             |             |      |      | 1.0  |      | ror r9d, 0xf
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r14d, edx
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r12d, esi
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | xor r9d, r10d
+|   2^     |             |      |             |             | 1.0  |      |      | 1.0  | mov dword ptr [rdi], r14d
+|   2^     |             |      |             |             | 1.0  |      |      | 1.0  | mov dword ptr [rdi+0x4], r11d
+|   2^     |             |      |             |             | 1.0  |      |      | 1.0  | mov dword ptr [rdi+0x8], r12d
+|   2^     |             |      |             |             | 1.0  |      |      | 1.0  | mov dword ptr [rdi+0xc], r9d
+|   1      |             | 0.5  |             |             |      | 0.5  |      |      | add rcx, 0x20
+|   1*     |             |      |             |             |      |      |      |      | cmp r15d, 0x6
+|   0*F    |             |      |             |             |      |      |      |      | jnz 0xfffffffffffffd9d
+Total Num Of Uops: 258

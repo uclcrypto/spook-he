@@ -1,0 +1,95 @@
+Intel(R) Architecture Code Analyzer Version -  v3.0-28-g1ba2cbb build date: 2017-10-23;16:42:45
+Analyzed File -  ./../prim_bench_iaca/shadow_512bit-skylake-avx512-iaca.o
+Binary Format - 64Bit
+Architecture  -  SKX
+Analysis Type - Throughput
+
+Throughput Analysis Report
+--------------------------
+Block Throughput: 32.00 Cycles       Throughput Bottleneck: Backend
+Loop Count:  22
+Port Binding In Cycles Per Iteration:
+--------------------------------------------------------------------------------------------------
+|  Port  |   0   -  DV   |   1   |   2   -  D    |   3   -  D    |   4   |   5   |   6   |   7   |
+--------------------------------------------------------------------------------------------------
+| Cycles | 19.3     0.0  | 19.3  |  2.0     2.0  |  2.0     1.0  |  1.0  | 19.4  |  1.0  |  0.0  |
+--------------------------------------------------------------------------------------------------
+
+DV - Divider pipe (on port 0)
+D - Data fetch pipe (on ports 2 and 3)
+F - Macro Fusion with the previous instruction occurred
+* - instruction micro-ops not bound to a port
+^ - Micro Fusion occurred
+# - ESP Tracking sync uop was issued
+@ - SSE instruction followed an AVX256/AVX512 instruction, dozens of cycles penalty is expected
+X - instruction not supported, was not accounted in Analysis
+
+| Num Of   |                    Ports pressure in cycles                         |      |
+|  Uops    |  0  - DV    |  1   |  2  -  D    |  3  -  D    |  4   |  5   |  6   |  7   |
+-----------------------------------------------------------------------------------------
+|   1      |             |      | 1.0     1.0 |             |      |      |      |      | vmovdqa64 zmm0, zmmword ptr [rsp-0x40]
+|   1      |             |      |             |             |      |      | 1.0  |      | sub rax, 0xffffffffffffff80
+|   1      |             | 1.0  |             |             |      |      |      |      | vmovdqa64 xmm7, xmm0
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti32x4 xmm1, zmm0, 0x1
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti64x4 ymm0, zmm0, 0x1
+|   1      |             | 1.0  |             |             |      |      |      |      | vmovdqa64 xmm2, xmm0
+|   1      |             | 1.0  |             |             |      |      |      |      | vpand xmm6, xmm1, xmm7
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti64x2 xmm0, ymm0, 0x1
+|   1      |             | 1.0  |             |             |      |      |      |      | vpxor xmm6, xmm6, xmm2
+|   1      |             | 1.0  |             |             |      |      |      |      | vpand xmm2, xmm0, xmm7
+|   1      |             | 1.0  |             |             |      |      |      |      | vpxor xmm2, xmm2, xmm1
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vmovdqa64 xmm1, xmm2
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpand xmm2, xmm6, xmm2
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpxor xmm2, xmm2, xmm0
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti32x4 zmm1, zmm1, xmm6, 0x1
+|   1      | 0.3         | 0.7  |             |             |      |      |      |      | vpand xmm0, xmm0, xmm6
+|   1      | 0.7         | 0.3  |             |             |      |      |      |      | vpxor xmm0, xmm0, xmm7
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti32x4 zmm1, zmm1, xmm2, 0x2
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti32x4 zmm1, zmm1, xmm0, 0x3
+|   1      |             |      |             |             |      | 1.0  |      |      | vpermd zmm1, zmm3, zmm1
+|   1      | 1.0         |      |             |             |      |      |      |      | vprord zmm2, zmm1, 0xc
+|   1      | 1.0         |      |             |             |      |      |      |      | vpxord zmm2, zmm2, zmm1
+|   1      | 1.0         |      |             |             |      |      |      |      | vprold zmm1, zmm1, 0xf
+|   1      | 1.0         |      |             |             |      |      |      |      | vprord zmm0, zmm2, 0x3
+|   1      | 1.0         |      |             |             |      |      |      |      | vpxord zmm1, zmm1, zmm2
+|   1      | 1.0         |      |             |             |      |      |      |      | vpxord zmm1, zmm0, zmm1
+|   1      | 1.0         |      |             |             |      |      |      |      | vprold zmm2, zmm1, 0x1
+|   1      | 1.0         |      |             |             |      |      |      |      | vpxord zmm2, zmm2, zmm1
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd zmm6, zmm2, 0xb1
+|   1      | 1.0         |      |             |             |      |      |      |      | vprord zmm2, zmm2, 0xf
+|   1      | 1.0         |      |             |             |      |      |      |      | vpsrlvd zmm0, zmm6, zmm5
+|   1      | 1.0         |      |             |             |      |      |      |      | vpsllvd zmm6, zmm6, zmm4
+|   1      | 0.6         |      |             |             |      | 0.4  |      |      | vpord zmm0, zmm0, zmm6
+|   1      | 0.4         |      |             |             |      | 0.6  |      |      | vpxord zmm1, zmm2, zmm1
+|   1      | 0.6         |      |             |             |      | 0.4  |      |      | vpxord zmm0, zmm0, zmm1
+|   1      |             |      |             |             |      | 1.0  |      |      | vpermd zmm0, zmm3, zmm0
+|   2^     | 1.0         |      |             | 1.0     1.0 |      |      |      |      | vpxord zmm0, zmm0, zmmword ptr [rax-0x80]
+|   1      |             | 1.0  |             |             |      |      |      |      | vmovdqa64 xmm7, xmm0
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti32x4 xmm1, zmm0, 0x1
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti64x4 ymm0, zmm0, 0x1
+|   1      |             | 1.0  |             |             |      |      |      |      | vmovdqa64 xmm2, xmm0
+|   1      |             | 1.0  |             |             |      |      |      |      | vpand xmm6, xmm1, xmm7
+|   1      |             |      |             |             |      | 1.0  |      |      | vextracti64x2 xmm0, ymm0, 0x1
+|   1      |             | 1.0  |             |             |      |      |      |      | vpxor xmm6, xmm6, xmm2
+|   1      |             | 1.0  |             |             |      |      |      |      | vpand xmm2, xmm0, xmm7
+|   1      |             | 1.0  |             |             |      |      |      |      | vpxor xmm2, xmm2, xmm1
+|   1      |             | 1.0  |             |             |      |      |      |      | vmovdqa64 xmm1, xmm2
+|   1      |             | 1.0  |             |             |      |      |      |      | vpand xmm2, xmm6, xmm2
+|   1      |             | 1.0  |             |             |      |      |      |      | vpxor xmm2, xmm2, xmm0
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti32x4 zmm1, zmm1, xmm6, 0x1
+|   1      |             | 1.0  |             |             |      |      |      |      | vpand xmm0, xmm0, xmm6
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti32x4 zmm1, zmm1, xmm2, 0x2
+|   1      |             | 1.0  |             |             |      |      |      |      | vpxor xmm0, xmm0, xmm7
+|   1      |             |      |             |             |      | 1.0  |      |      | vinserti32x4 zmm0, zmm1, xmm0, 0x3
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd zmm1, zmm0, 0xbf
+|   2^     | 1.0         |      | 1.0     1.0 |             |      |      |      |      | vpxord zmm1, zmm1, zmmword ptr [rax-0x40]
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd zmm2, zmm0, 0x1
+|   1      |             |      |             |             |      | 1.0  |      |      | vpshufd zmm0, zmm0, 0x5a
+|   1      | 1.0         |      |             |             |      |      |      |      | vpxord zmm0, zmm2, zmm0
+|   1      | 1.0         |      |             |             |      |      |      |      | vpxord zmm0, zmm1, zmm0
+|   2^     |             |      |             | 1.0         | 1.0  |      |      |      | vmovdqa64 zmmword ptr [rsp-0x40], zmm0
+|   1*     |             |      |             |             |      |      |      |      | cmp rdx, rax
+|   0*F    |             |      |             |             |      |      |      |      | jnz 0xfffffffffffffe8e
+Total Num Of Uops: 65
+Analysis Notes:
+Backend allocation was stalled due to unavailable allocation resources.

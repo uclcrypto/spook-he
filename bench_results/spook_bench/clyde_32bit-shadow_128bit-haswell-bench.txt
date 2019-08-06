@@ -1,0 +1,16 @@
+16 bytes, ns/iter: 723.2, ns/byte: 45.2
+32 bytes, ns/iter: 690.4, ns/byte: 21.58
+64 bytes, ns/iter: 896.4, ns/byte: 14.01
+128 bytes, ns/iter: 1308, ns/byte: 10.22
+256 bytes, ns/iter: 2131, ns/byte: 8.326
+512 bytes, ns/iter: 3790, ns/byte: 7.402
+1024 bytes, ns/iter: 7080, ns/byte: 6.914
+2048 bytes, ns/iter: 1.367e+04, ns/byte: 6.675
+4096 bytes, ns/iter: 2.684e+04, ns/byte: 6.552
+8192 bytes, ns/iter: 5.316e+04, ns/byte: 6.49
+16384 bytes, ns/iter: 1.059e+05, ns/byte: 6.466
+32768 bytes, ns/iter: 2.114e+05, ns/byte: 6.45
+65536 bytes, ns/iter: 4.222e+05, ns/byte: 6.443
+131072 bytes, ns/iter: 8.441e+05, ns/byte: 6.44
+262144 bytes, ns/iter: 1.688e+06, ns/byte: 6.438
+524288 bytes, ns/iter: 3.375e+06, ns/byte: 6.438
