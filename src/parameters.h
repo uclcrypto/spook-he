@@ -12,10 +12,12 @@
 #ifndef _PARAMETERS_H_
 #define _PARAMETERS_H_
 
+// Selects the "su" variant if set to 0 and the "mu" variant if set to "1"
 #ifndef MULTI_USER
 #define MULTI_USER 0
 #endif // MULTI_USER
 
+// Selects the "512" variant if set to 0 and the "384" variant if set to "1"
 #ifndef SMALL_PERM
 #define SMALL_PERM 0
 #endif // SMALL_PERM

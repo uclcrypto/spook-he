@@ -21,6 +21,11 @@ Shadow:
 These primitives have much better performance than the reference implementation, however they are not fully optimized either: portability and code simplicity are also a concern.
 The code size is not optimized at all, for reduced code size, please look at the portable embedded implementation.
 
+## Configuration
+
+Selecting the spook variant is done by means of the `#define`s `MULTI_USER` and `SMALL_PERM` (both default to `0`, which gives the primary candidate).
+
+
 ## Build
 
 Have a look at `test/Makefile`.
