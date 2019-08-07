@@ -50,3 +50,8 @@ A few results are shown in [PERFORMANCE](PERFORMANCE.md).
 ## Contributing
 
 Contributions of any kind (code, bug reports, benckmarks, ...) are welcome. Please contact us at `team@spook.dev`.
+
+
+## License
+
+This software distributed under the terms of the MIT license. See [LICENSE](LICENSE) for details.
