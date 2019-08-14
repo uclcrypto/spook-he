@@ -38,7 +38,7 @@ The benchmark was run on a Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz.
 The reported performance figures are cycles per execution for the primitives, and throughput (cycles per byte) for Spook (for large messages).
 
 
-Clyde128:
+Clyde128 (Cycles):
 
  | |x86-64|haswell|skylake-avx512|
 |-|-|-|-|
@@ -46,7 +46,7 @@ Clyde128:
 |clyde_64bit| |271.00|271.40| 
 
 
-Shadow512:
+Shadow512 (Cycles):
 
  | |x86-64|haswell|skylake-avx512|
 |-|-|-|-|
@@ -55,7 +55,7 @@ Shadow512:
 |shadow_32bit|904.40|456.60|342.40|
 |shadow_512bit| | |454.20| 
 
-Spook128su512v1
+Spook128su512v1 (Cycles per byte):
 
  | |x86-64|haswell|skylake-avx512|
 |-|-|-|-|
