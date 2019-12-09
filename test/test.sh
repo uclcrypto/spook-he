@@ -35,12 +35,23 @@ test_build_spook 1 0 410c79bf206274bf6145103d1e87c20e17d258cd77c550fd0d33ef30a97
 test_build_spook 1 1 53d431a078490a709767c0089614fcda87218f11e97ab565d2e84f25bbfcd9cc
 }
 
+test_big_spook_versions()
+{
+test_build_spook 0 0 c744322005f6d6df1846bc4baa4033047856d8183f502a65604711dd25e87b8c
+test_build_spook 1 0 410c79bf206274bf6145103d1e87c20e17d258cd77c550fd0d33ef30a971c460
+}
+
 for ctype in 32bit 64bit
 do
-    for stype in 32bit 128bit 256bit 512bit
+    export CLYDE_TYPE=clyde_$ctype;
+    for stype in 32bit 128bit 
     do
-        export CLYDE_TYPE=clyde_$ctype;
         export SHADOW_TYPE=shadow_$stype;
         test_all_spook_versions;
+    done
+    for stype in 256bit 512bit
+    do
+        export SHADOW_TYPE=shadow_$stype;
+        test_big_spook_versions;
     done
 done

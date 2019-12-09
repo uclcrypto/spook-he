@@ -49,7 +49,13 @@ max_throughput_table = [
         [str(min(results.get((implem, arch), dict()).values(), default=' ')) for arch in archs]
         for implem in implems]
 
+def throughput_bytes(n):
+    return [[str(results.get((implem, arch), dict()).get(n, ' ')) for arch in archs] for implem in implems]
+
 print(
         'max throughput (cycles/byte):\n\n',
         render_markdown_table(archs, implems, max_throughput_table), '\n'
         )
+
+n=2048
+print('throughput (cycles/byte) for n={} bytes:\n\n'.format(n), render_markdown_table(archs, implems, throughput_bytes(n)))
