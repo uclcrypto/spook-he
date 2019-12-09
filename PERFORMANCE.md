@@ -55,11 +55,29 @@ Shadow512 (Cycles):
 |shadow_32bit|904.40|456.60|342.40|
 |shadow_512bit| | |454.20| 
 
-Spook128su512v1 (Cycles per byte):
+Spook128su512v1 (Cycles per byte), max throughput:
 
  | |x86-64|haswell|skylake-avx512|
 |-|-|-|-|
-|clyde_32bit-shadow_128bit|12.70|12.88|10.06|
-|clyde_32bit-shadow_32bit|159.56|100.98|11.33|
-|clyde_64bit-shadow_128bit| |12.87|10.06| 
+|clyde_32bit-shadow_128bit|12.71|12.88|10.05|
+|clyde_32bit-shadow_256bit| |13.68|10.35|
+|clyde_32bit-shadow_32bit|157.46|100.84|11.33|
+|clyde_32bit-shadow_512bit| | |14.81|
+|clyde_64bit-shadow_128bit| |12.88|10.04|
+|clyde_64bit-shadow_256bit| |13.68|10.35|
+|clyde_64bit-shadow_32bit| |14.71|11.33|
+|clyde_64bit-shadow_512bit| | |14.77| 
+
+Spook128su512v1 (Cycles per byte), throughput for m=2048 bytes:
+
+ | |x86-64|haswell|skylake-avx512|
+|-|-|-|-|
+|clyde_32bit-shadow_128bit|13.32|13.34|10.05|
+|clyde_32bit-shadow_256bit| |14.15|10.76|
+|clyde_32bit-shadow_32bit|29.26|15.24|11.80|
+|clyde_32bit-shadow_512bit| | |15.32|
+|clyde_64bit-shadow_128bit| |13.34|10.04|
+|clyde_64bit-shadow_256bit| |14.14|11.07|
+|clyde_64bit-shadow_32bit| |15.23|11.79|
+|clyde_64bit-shadow_512bit| | |15.36|
 
