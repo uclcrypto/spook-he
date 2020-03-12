@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2019 Gaëtan Cassiers
+ * Copyright (c) 2019 2020 Gaëtan Cassiers
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,8 @@
 #define IACA_END
 #endif
 
+#include <xmmintrin.h>
+
 #include "primitives.h"
 
 #define SHADOW_NS 6                   // Number of steps
@@ -50,31 +52,7 @@ typedef struct __attribute__((aligned(64))) shadow_simd {
 static void sbox_layer_simd(shadow_simd* simd);
 static void lbox_simd(row_set* x, row_set* y);
 static void lbox_layer_simd(shadow_simd* simd);
-static void add_rc_simd(shadow_simd* simd, unsigned int round);
 static void dbox_mls_layer_simd(shadow_simd *simd);
-
-#if SMALL_PERM==0
-#define RS0 { 0, 0, 0, 0 }
-#define RS1S { 1, 2, 4, 8 }
-#else
-#define RS0 { 0, 0, 0, 0 }
-#define RS1S { 1, 2, 4, 0 }
-#endif // SMALL_PERM==0
-static const shadow_simd shadow_simd_rc[SHADOW_NR] = {
-    {{ RS1S, RS0, RS0, RS0 }}, // 0
-    {{ RS0, RS1S, RS0, RS0 }}, // 1
-    {{ RS0, RS0, RS1S, RS0 }}, // 2
-    {{ RS0, RS0, RS0, RS1S }}, // 3
-    {{ RS1S, RS1S, RS0, RS0 }}, // 4
-    {{ RS0, RS1S, RS1S, RS0 }}, // 5
-    {{ RS0, RS0, RS1S, RS1S }}, // 6
-    {{ RS1S, RS1S, RS0, RS1S }}, // 7
-    {{ RS1S, RS0, RS1S, RS0 }}, // 8
-    {{ RS0, RS1S, RS0, RS1S }}, // 9
-    {{ RS1S, RS1S, RS1S, RS0 }}, // 10
-    {{ RS0, RS1S, RS1S, RS1S }} // 11
-};
-
 
 static void sbox_layer_simd(shadow_simd* simd) {
   row_set y1 = (simd->rows[0] & simd->rows[1]) ^ simd->rows[2];
@@ -111,29 +89,105 @@ static void lbox_layer_simd(shadow_simd* simd) {
   lbox_simd(&simd->rows[2], &simd->rows[3]);
 }
 
-static void add_rc_simd(shadow_simd* simd, unsigned int round) {
-  for (unsigned int i = 0; i < LS_ROWS; i++) {
-      simd->rows[i] ^= shadow_simd_rc[round].rows[i];
-  }
+static const row_set dbox_shuffle1 = { 0, 4, 1, 5 };
+static const row_set dbox_shuffle2 = { 2, 6, 3, 7 };
+static const row_set dbox_shuffle3 = { 0, 1, 4, 5 };
+static const row_set dbox_shuffle4 = { 2, 3, 6, 7 };
+static void transpose_state(shadow_simd *simd) {
+    row_set t0 = __builtin_shuffle(simd->rows[0], simd->rows[1], dbox_shuffle1);
+    row_set t1 = __builtin_shuffle(simd->rows[2], simd->rows[3], dbox_shuffle1);
+    row_set t2 = __builtin_shuffle(simd->rows[0], simd->rows[1], dbox_shuffle2);
+    row_set t3 = __builtin_shuffle(simd->rows[2], simd->rows[3], dbox_shuffle2);
+    simd->rows[0] = __builtin_shuffle(t0, t1, dbox_shuffle3);
+    simd->rows[1] = __builtin_shuffle(t0, t1, dbox_shuffle4);
+    simd->rows[2] = __builtin_shuffle(t2, t3, dbox_shuffle3);
+    simd->rows[3] = __builtin_shuffle(t2, t3, dbox_shuffle4);
+    /*
+    __m128i I0 = simd->rows[0];
+    __m128i I1 = simd->rows[1];
+    __m128i I2 = simd->rows[2];
+    __m128i I3 = simd->rows[3];
+    __m128i T0 = _mm_unpacklo_epi32(I0, I1);
+    __m128i T1 = _mm_unpacklo_epi32(I2, I3);
+    __m128i T2 = _mm_unpackhi_epi32(I0, I1);
+    __m128i T3 = _mm_unpackhi_epi32(I2, I3);
+    simd->rows[0] = _mm_unpacklo_epi64(T0, T1);
+    simd->rows[1] = _mm_unpackhi_epi64(T0, T1);
+    simd->rows[2] = _mm_unpacklo_epi64(T2, T3);
+    simd->rows[3] = _mm_unpackhi_epi64(T2, T3);
+    */
+}
+static row_set xtime(row_set x) {
+    row_set b = x >> 31;
+    return (x << 1) ^ b ^ (b << 8);
+}
+static void dbox_mls_layer_simd(shadow_simd *simd) {
+#if SMALL_PERM==0
+    simd->rows[0] ^= simd->rows[1];
+    simd->rows[2] ^= simd->rows[3];
+    simd->rows[1] ^= simd->rows[2];
+    simd->rows[3] ^= xtime(simd->rows[0]);
+    simd->rows[1] = xtime(simd->rows[1]);
+    simd->rows[0] ^= simd->rows[1];
+    simd->rows[2] ^= xtime(simd->rows[3]);
+    simd->rows[1] ^= simd->rows[2];
+    simd->rows[3] ^= simd->rows[0];
+#else
+    row_set x0 = simd->rows[0];
+    row_set x1 = simd->rows[1];
+    row_set x2 = simd->rows[2];
+    row_set a = x0 ^ x1;
+    row_set b = x0 ^ x2;
+    row_set c = x1 ^ b;
+    row_set d = a ^ xtime(b);
+    simd->rows[0] = b ^ d;
+    simd->rows[1] = c;
+    simd->rows[2] = d;
+#endif
 }
 
+// Row on which to XOR the constant in Shadow Round A
+static const uint32_t SHADOW_RA_CST_ROW = 1;
+// Bundle on which to XOR the constant in Shadow Round B
+static const uint32_t SHADOW_RB_CST_BUNDLE = 0;
+
 #if SMALL_PERM==0
-static const row_set dbox_shuffle1 = { 1, 0, 0, 0 };
-static const row_set dbox_shuffle2 = { 2, 2, 1, 1 };
-static const row_set dbox_shuffle3 = { 3, 3, 3, 2 };
+static const row_set SHADOW_CST_RA[SHADOW_NS] = {
+    { 0xf8737400, 0xf0e6e8c5, 0xe1cdd14f, 0xc39ba25b },
+    { 0x73744118, 0xe6e88230, 0xcdd104a5, 0x9ba2098f },
+    { 0x74413cff, 0xe88279fe, 0xd104f339, 0xa209e6b7 },
+    { 0x413cd9a4, 0x8279b348, 0x4f36655, 0x9e6ccaa },
+    { 0x3cd99585, 0x79b32b0a, 0xf3665614, 0xe6ccaced },
+    { 0xd99594cc, 0xb32b295d, 0x6656527f, 0xccaca4fe } 
+};
+static const row_set SHADOW_CST_RB[SHADOW_NS] = {
+    { 0x87374473, 0xe6e8823, 0x1cdd1046, 0x39ba208c },
+ { 0x374413db, 0x6e8827b6, 0xdd104f6c, 0xba209e1d },
+ { 0x4413cdab, 0x88279b56, 0x104f3669, 0x209e6cd2 },
+ { 0x13cd9954, 0x279b32a8, 0x4f366550, 0x9e6ccaa0 },
+ { 0xcd99591f, 0x9b32b2fb, 0x36656533, 0x6ccaca66 },
+ { 0x99594939, 0x32b292b7, 0x6565256e, 0xcaca4adc } 
+};
 #else
-static const row_set dbox_shuffle1 = { 0, 0, 0, 3 };
-static const row_set dbox_shuffle2 = { 1, 2, 1, 3 };
-static const row_set dbox_shuffle3 = { 2, 3, 3, 3 };
+static const row_set SHADOW_CST_RA[SHADOW_NS] = {
+    { 0xf8737400, 0xf0e6e8c5, 0xe1cdd14f, 0x0 },
+ { 0x39ba208c, 0x73744118, 0xe6e88230, 0x0 },
+ { 0xdd104f6c, 0xba209e1d, 0x74413cff, 0x0 },
+ { 0x88279b56, 0x104f3669, 0x209e6cd2, 0x0 },
+ { 0x13cd9954, 0x279b32a8, 0x4f366550, 0x0 },
+ { 0xe6ccaced, 0xcd99591f, 0x9b32b2fb, 0x0 } 
+};
+static const row_set SHADOW_CST_RB[SHADOW_NS] = {
+    { 0xc39ba25b, 0x87374473, 0xe6e8823, 0x1cdd1046 },
+ { 0xcdd104a5, 0x9ba2098f, 0x374413db, 0x6e8827b6 },
+ { 0xe88279fe, 0xd104f339, 0xa209e6b7, 0x4413cdab },
+ { 0x413cd9a4, 0x8279b348, 0x4f36655, 0x9e6ccaa },
+ { 0x9e6ccaa0, 0x3cd99585, 0x79b32b0a, 0xf3665614 },
+ { 0x36656533, 0x6ccaca66, 0xd99594cc, 0xb32b295d } 
+};
 #endif // SMALL_PERM==0
-static void dbox_mls_layer_simd(shadow_simd *simd) {
-  for (unsigned int row = 0; row < LS_ROWS; row++) {
-      row_set a = __builtin_shuffle(simd->rows[row], dbox_shuffle1);
-      row_set b = __builtin_shuffle(simd->rows[row], dbox_shuffle2);
-      row_set c = __builtin_shuffle(simd->rows[row], dbox_shuffle3);
-      simd->rows[row] = a ^ b ^ c;
-  }
-}
+
+
 void shadow(shadow_state state) {
 #if SMALL_PERM==0
     shadow_simd simd = {
@@ -158,10 +212,12 @@ void shadow(shadow_state state) {
         IACA_START
             sbox_layer_simd(&simd);
         lbox_layer_simd(&simd);
-        add_rc_simd(&simd, 2*s);
+            simd.rows[SHADOW_RA_CST_ROW] ^= SHADOW_CST_RA[s];
         sbox_layer_simd(&simd);
+        transpose_state(&simd);
         dbox_mls_layer_simd(&simd);
-        add_rc_simd(&simd, 2*s+1);
+        simd.rows[SHADOW_RB_CST_BUNDLE] ^= SHADOW_CST_RB[s];
+        transpose_state(&simd);
     }
     IACA_END
     row_set res0 = { simd.rows[0][0], simd.rows[1][0], simd.rows[2][0], simd.rows[3][0] };

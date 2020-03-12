@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2019 Gaëtan Cassiers
+ * Copyright (c) 2019 2020 Gaëtan Cassiers
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +47,11 @@ typedef union __attribute__((aligned(64))) shadow_simd {
     row_set mixed_rows[4];
     __m256i rowsi[2];
 } shadow_simd;
+
+typedef union {
+    __m128i sse;
+    row_set vec;
+} ssew;
 
 // drow_set[0] = { B0R0, B1R0, B2R0, B3R0, B0R2, B1R2, B2R2, B3R2 }
 // drow_set[1] = { B0R1, B1R1, B2R1, B3R1, B0R3, B1R3, B2R3, B3R3 }
@@ -102,6 +107,17 @@ static void lbox_layer_simd(shadow_simd* simd) {
     dlbox_simd(&simd->rows[0], &simd->rows[1]);
 }
 
+static row_set xtime(row_set x) {
+    row_set b = x >> 31;
+    return (x << 1) ^ b ^ (b << 8);
+}
+static __m128i xtimew(__m128i x) {
+    ssew xs;
+    xs.sse = x;
+    xs.vec = xtime(xs.vec);
+    return xs.sse;
+}
+
 static const drow_set sel_low = { 0, 1, 2, 3, 0, 1, 2, 3 };
 static const drow_set sel_high = { 4, 5, 6, 7, 4, 5, 6, 7 };
 static const drow_set dispatch = { 0, 1, 2, 3, 12, 13, 14, 15 };
@@ -110,24 +126,21 @@ static void sbox_layer_simd(shadow_simd* simd) {
     __m128i x2 = _mm256_extracti128_si256(simd->rowsi[0], 1);
     __m128i x1 = _mm256_castsi256_si128(simd->rowsi[1]);
     __m128i x3 = _mm256_extracti128_si256(simd->rowsi[1], 1);
-    __m128i y1 = (x0 & x1) ^ x2;
-    __m128i y0 = (x0 & x3) ^ x1;
-    __m128i y3 = (y1 & x3) ^ x0;
-    __m128i y2 = (y0 & y1) ^ x3;
-    /*
-    __m256i res0 = _mm256_castsi128_si256(y0);
-    res0 = _mm256_inserti32x4(res0, y2, 1);
-    simd->rowsi[0] = res0;
-    __m256i res1 = _mm256_castsi128_si256(y1);
-    res1 = _mm256_inserti32x4(res1, y3, 1);
-    simd->rowsi[1] = res1;
-    */
-    simd->rowsi[0] = _mm256_castsi128_si256(y0);
-    //simd->rowsi[0] = _mm256_inserti32x4(simd->rowsi[0], y2, 1);
-    simd->rowsi[0] = _mm256_inserti128_si256(simd->rowsi[0], y2, 1);
-    simd->rowsi[1] = _mm256_castsi128_si256(y1);
-    //simd->rowsi[1] = _mm256_inserti32x4(simd->rowsi[1], y3, 1);
-    simd->rowsi[1] = _mm256_inserti128_si256(simd->rowsi[1], y3, 1);
+
+    x0 ^= x1;
+    x2 ^= x3;
+    x1 ^= x2;
+    x3 ^= xtimew(x0);
+    x1 = xtimew(x1);
+    x0 ^= x1;
+    x2 ^= xtimew(x3);
+    x1 ^= x2;
+    x3 ^= x0;
+
+    simd->rowsi[0] = _mm256_castsi128_si256(x0);
+    simd->rowsi[0] = _mm256_inserti128_si256(simd->rowsi[0], x2, 1);
+    simd->rowsi[1] = _mm256_castsi128_si256(x1);
+    simd->rowsi[1] = _mm256_inserti128_si256(simd->rowsi[1], x3, 1);
 }
 static void add_rc_simd(shadow_simd* simd, unsigned int round) {
   for (unsigned int i = 0; i < 2; i++) {

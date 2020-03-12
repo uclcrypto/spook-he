@@ -1,7 +1,7 @@
 
 CC?=gcc
 #CFLAGS:=-std=c99 -Wall -Wextra -g $(CFLAGS)
-CFLAGS:=-std=c99 -g $(CFLAGS)
+CFLAGS:=-std=c99 -g $(CFLAGS) -flax-vector-conversions
 
 BDIR?=../build_test
 SRCDIR?=../src

@@ -8,9 +8,9 @@ clyde 32bit shadow 128bit haswell
 clyde 32bit shadow 128bit skylake-avx512
 clyde 64bit shadow 128bit haswell
 clyde 64bit shadow 128bit skylake-avx512
-clyde 32bit shadow 256bit haswell
-clyde 32bit shadow 256bit skylake-avx512
-clyde 64bit shadow 256bit haswell
-clyde 64bit shadow 256bit skylake-avx512
-clyde 32bit shadow 512bit skylake-avx512
-clyde 64bit shadow 512bit skylake-avx512
+#clyde 32bit shadow 256bit haswell
+#clyde 32bit shadow 256bit skylake-avx512
+#clyde 64bit shadow 256bit haswell
+#clyde 64bit shadow 256bit skylake-avx512
+#clyde 32bit shadow 512bit skylake-avx512
+#clyde 64bit shadow 512bit skylake-avx512

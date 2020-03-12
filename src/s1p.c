@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2019 Gaëtan Cassiers
+ * Copyright (c) 2019 2020 Gaëtan Cassiers
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,11 +72,12 @@ static void init_sponge_state(shadow_state state,
                               const unsigned char *n) {
   // init state
   memset(state, 0, SHADOW_NBYTES);
-  memcpy(state[0], p, P_NBYTES);
-  memcpy(state[1], n, CRYPTO_NPUBBYTES);
+  memcpy(state[1], p, P_NBYTES);
+  memcpy(state[2], n, CRYPTO_NPUBBYTES);
   // TBC
-  memcpy(state[MLS_BUNDLES-1], n, CRYPTO_NPUBBYTES);
-  clyde128_encrypt(state[MLS_BUNDLES-1], state[0], k);
+  memcpy(state[0], n, CRYPTO_NPUBBYTES);
+  clyde128_encrypt(state[0], state[1], k);
+
   // initial permutation
   shadow(state);
 }
