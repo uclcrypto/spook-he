@@ -14,7 +14,10 @@ def parse_spook_id(s):
     return ((clyde, shadow), '-'.join((clyde_f, shadow_f)), arch)
 
 def fmt_cycles(cycles):
-    return '{:.2f}'.format(cycles)
+    try:
+        return '{:.2f}'.format(cycles)
+    except ValueError:
+        return cycles
 
 def parse_line(s):
     try:
@@ -25,7 +28,7 @@ def parse_line(s):
         val = None
     else:
         n_bytes, _, _, ns_iter, _, ns_byte = res.strip().split(' ')
-        throughput = fmt_cycles(PROC_FREQ*float(ns_byte))
+        throughput = PROC_FREQ*float(ns_byte)
         val = (int(n_bytes), throughput)
     _, implem, arch = parse_spook_id(spook_id.strip())
     return ((implem, arch), val)
@@ -40,17 +43,18 @@ for (implem, arch), val in map(parse_line, open(RES_FILE).read().splitlines()):
     if val is not None:
         results.setdefault((implem, arch), dict())[val[0]] = val[1]
 
+print('results', results)
 
 implems = list(sorted(set(implem for implem, _ in results.keys())))
 
 archs = ['x86-64', 'haswell', 'skylake-avx512']
 
 max_throughput_table = [
-        [str(min(results.get((implem, arch), dict()).values(), default=' ')) for arch in archs]
+        [fmt_cycles(min(results.get((implem, arch), dict()).values(), default=' ')) for arch in archs]
         for implem in implems]
 
 def throughput_bytes(n):
-    return [[str(results.get((implem, arch), dict()).get(n, ' ')) for arch in archs] for implem in implems]
+    return [[fmt_cycles(results.get((implem, arch), dict()).get(n, ' ')) for arch in archs] for implem in implems]
 
 print(
         'max throughput (cycles/byte):\n\n',

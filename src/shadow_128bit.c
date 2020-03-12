@@ -44,6 +44,7 @@
   (SHADOW_NBYTES / (LS_ROWS* LS_ROW_BYTES)) // Bundles in the mLS design
 
 typedef uint32_t row_set __attribute__ ((vector_size (16)));
+typedef int32_t srow_set __attribute__ ((vector_size (16)));
 
 typedef struct __attribute__((aligned(64))) shadow_simd {
     row_set rows[4];
@@ -118,8 +119,8 @@ static void transpose_state(shadow_simd *simd) {
     */
 }
 static row_set xtime(row_set x) {
-    row_set b = x >> 31;
-    return (x << 1) ^ b ^ (b << 8);
+    row_set b = (row_set) (((srow_set) x) >> 31);
+    return (x << 1) ^ (b & 0x101);
 }
 static void dbox_mls_layer_simd(shadow_simd *simd) {
 #if SMALL_PERM==0
