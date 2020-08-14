@@ -3,8 +3,8 @@
 CC=gcc
 CFLAGS="-std=gnu99 -g -Ofast -mtune=skylake-avx512"
 
-BENCH_DIR_IACA=../prim_bench_iaca
-BENCH_DIR_REAL=../prim_bench_real
+BENCH_DIR_IACA=../bench_results/prim_bench_iaca
+BENCH_DIR_REAL=../bench_results/prim_bench_real
 
 export PROC_FREQ=2.0 # Processor frequency (GHz)
 
@@ -20,11 +20,13 @@ grep -v ^# < $BENCH_RUNS | while read -r line
 do
     set -- x $line;
     TYPE=$2
-    PRIM=${TYPE}_$3
+    NB=$3
+    PRIM=${TYPE}_${NB}bit
     ARCH=$4
+    DEF_TYPE=`echo $TYPE | tr [a-z] [A-Z]`_TYPE_${NB}_BIT 
     echo bench $TYPE $PRIM $ARCH ...;
     FULLNAME=./$BENCH_DIR_IACA/$PRIM-$ARCH-iaca
-    $CC $CFLAGS -march=$ARCH -D BENCH_IACA -c ../src/$PRIM.c -o $FULLNAME.o
+    $CC $CFLAGS -march=$ARCH -D BENCH_IACA -D $DEF_TYPE -c ../src/$PRIM.c -o $FULLNAME.o
     iaca -arch SKX  $FULLNAME.o > $FULLNAME.txt
 done
 
@@ -32,7 +34,10 @@ for f in `ls $BENCH_DIR_IACA/*.txt`
 do
     INSTANCE=`echo $f | awk -F/ '{print $NF}' | cut -d '.' -f 1`
     CYCLES=`grep 'Block Throughput' $f | cut -d ' ' -f 3`
-    echo $INSTANCE $CYCLES >> $BENCH_DIR_IACA/results.txt
+    if [[ "$CYCLES" != "" ]]
+    then
+        echo $INSTANCE $CYCLES >> $BENCH_DIR_IACA/results.txt
+    fi
 done
 
 # Real benchmark
@@ -50,12 +55,14 @@ grep -v ^# < $BENCH_RUNS | while read -r line
 do
     set -- x $line;
     TYPE=$2
-    PRIM=${TYPE}_$3
+    NB=$3
+    PRIM=${TYPE}_${NB}bit
     ARCH=$4
+    DEF_TYPE=`echo $TYPE | tr [a-z] [A-Z]`_TYPE_${NB}_BIT 
     echo bench $TYPE $PRIM $ARCH ...;
     FULLNAME=./$BENCH_DIR_REAL/$PRIM-$ARCH-bench
     BENCH_HARNESS=bench_$TYPE
-    $CC $CFLAGS -march=$ARCH  -c ../src/$PRIM.c -o $FULLNAME.o
+    $CC $CFLAGS -march=$ARCH  -D $DEF_TYPE -c ../src/$PRIM.c -o $FULLNAME.o
     $CC $CFLAGS -march=$ARCH  -D N_ITER=$N_ITER -I ../src -c ./src/$BENCH_HARNESS.c -o $BENCH_DIR_REAL/$BENCH_HARNESS.o
     $CC $CFLAGS -march=$ARCH $FULLNAME.o $BENCH_DIR_REAL/$BENCH_HARNESS.o -o $FULLNAME
     $FULLNAME > $FULLNAME.txt

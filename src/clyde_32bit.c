@@ -32,6 +32,8 @@
 
 #include "primitives.h"
 
+#ifdef CLYDE_TYPE_32_BIT
+
 #define CLYDE_128_NS 6                // Number of steps
 #define CLYDE_128_NR 2 * CLYDE_128_NS // Number of rounds
 
@@ -120,3 +122,5 @@ void clyde128_encrypt(clyde128_state state, const clyde128_state t, const unsign
   }
   IACA_END
 }
+
+#endif // CLYDE_TYPE_32_BIT

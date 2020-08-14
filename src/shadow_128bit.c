@@ -35,6 +35,8 @@
 
 #include "primitives.h"
 
+#ifdef SHADOW_TYPE_128_BIT
+
 #define SHADOW_NS 6                   // Number of steps
 #define SHADOW_NR 2 * SHADOW_NS       // Number of rounds
 
@@ -232,3 +234,5 @@ void shadow(shadow_state state) {
     memcpy(state[3], &res3, sizeof(row_set));
 #endif // SMALL_PERM==0
 }
+
+#endif // SHADOW_TYPE_128_BIT

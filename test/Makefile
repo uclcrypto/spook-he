@@ -6,15 +6,15 @@ CFLAGS:=-std=c99 -g $(CFLAGS) -flax-vector-conversions
 BDIR?=../build_test
 SRCDIR?=../src
 
-CLYDE_TYPE?=clyde_32bit
-#CLYDE_TYPE?=clyde_64bit
+CLYDE_TYPE?=CLYDE_TYPE_32_BIT
+#CLYDE_TYPE?=CLYDE_TYPE_64_BIT
 
-SHADOW_TYPE?=shadow_32bit
-#SHADOW_TYPE?=shadow_128bit
-#SHADOW_TYPE?=shadow_256bit
-#SHADOW_TYPE?=shadow_512bit
+SHADOW_TYPE?=SHADOW_TYPE_32_BIT
+#SHADOW_TYPE?=SHADOW_TYPE_128_BIT
 
-ifeq "$(CLYDE_TYPE)" "clyde_64bit"
+CFLAGS+=-D$(SHADOW_TYPE) -D$(CLYDE_TYPE)
+
+ifeq "$(CLYDE_TYPE)" "CLYDE_TYPE_64_BIT"
     CFLAGS+=-mbmi2
 endif
 ifeq "$(SHADOW_TYPE)" "shadow_256bit"
@@ -24,7 +24,7 @@ ifeq "$(SHADOW_TYPE)" "shadow_512bit"
     CFLAGS+=-mavx512f
 endif
 
-objects := s1p.o genkat_aead.o encrypt.o $(CLYDE_TYPE).o $(SHADOW_TYPE).o
+objects := s1p.o genkat_aead.o encrypt.o clyde_32bit.o clyde_64bit.o shadow_32bit.o shadow_128bit.o
 
 all: $(BDIR)/test
 

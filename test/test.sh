@@ -41,17 +41,12 @@ test_build_spook 0 0 c9f76c914bbd916c7479493a632cbe1518355bec1564ec99ec6a9e85778
 test_build_spook 1 0 3b72ee641cc670ac6e9b1c7abbc707783f006b5d8df272c658f953d62e2d1066
 }
 
-for ctype in 32bit 64bit
+for ctype in 32_BIT 64_BIT
 do
-    export CLYDE_TYPE=clyde_$ctype;
-    for stype in 32bit 128bit 
+    export CLYDE_TYPE=CLYDE_TYPE_$ctype;
+    for stype in 32_BIT 128_BIT
     do
-        export SHADOW_TYPE=shadow_$stype;
+        export SHADOW_TYPE=SHADOW_TYPE_$stype;
         test_all_spook_versions;
     done
-    #for stype in 256bit 512bit
-    #do
-    #    export SHADOW_TYPE=shadow_$stype;
-    #    test_big_spook_versions;
-    #done
 done

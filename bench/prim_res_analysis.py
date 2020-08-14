@@ -28,6 +28,7 @@ def parse_real_line(s):
     return (parse_prim_id(prim_id), val)
 
 def parse_iaca_line(s):
+    print(s)
     prim_id, cycles = s.split(' ')[:2]
     cycles = PRIM_NS*float(cycles)
     return (parse_prim_id(prim_id), fmt_cycles(cycles))

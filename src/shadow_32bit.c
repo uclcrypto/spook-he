@@ -26,6 +26,8 @@
 
 #include "primitives.h"
 
+#ifdef SHADOW_TYPE_32_BIT
+
 #define CLYDE_128_NS 6                // Number of steps
 #define CLYDE_128_NR 2 * CLYDE_128_NS // Number of rounds
 #define SHADOW_NS 6                   // Number of steps
@@ -135,3 +137,5 @@ void shadow(shadow_state state) {
     }
   }
 }
+
+#endif // SHADOW_TYPE_32_BIT

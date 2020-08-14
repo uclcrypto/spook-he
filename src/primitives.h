@@ -28,9 +28,17 @@
 #define MLS_BUNDLES                                                            \
   (SHADOW_NBYTES / (LS_ROWS* LS_ROW_BYTES)) // Bundles in the mLS design
 
-#define CLYDE_TYPE "clyde_32bit.c"
-#define SHADOW_TYPE "shadow_128bit.c"
+#ifndef CLYDE_TYPE_64_BIT
+#ifndef CLYDE_TYPE_32_BIT
+#define CLYDE_TYPE_32_BIT
+#endif
+#endif
 
+#ifndef SHADOW_TYPE_128_BIT
+#ifndef SHADOW_TYPE_32_BIT
+#define SHADOW_TYPE_32_BIT
+#endif
+#endif
 
 typedef __attribute__((aligned(16))) uint32_t clyde128_state[LS_ROWS];
 typedef __attribute__((aligned(64))) clyde128_state shadow_state[MLS_BUNDLES];

@@ -16,8 +16,11 @@ mkdir -p $BENCH_DIR
 grep -v ^# < $BENCH_RUNS | while read -r line
 do
     set -- x $line;
-    CLYDE=clyde_$3
-    SHADOW=shadow_$5
+    CLYDE=clyde_$3bit
+    SHADOW=shadow_$5bit
+    CLYDE_DEF=CLYDE_TYPE_$3_BIT
+    SHADOW_DEF=SHADOW_TYPE_$5_BIT
+    DEFS=-D CLYDE_DEF -D SHADOW_DEF
     ARCH=$6
     TYPE=$2
     echo bench $CLYDE $SHADOW $ARCH ...;
@@ -26,11 +29,11 @@ do
     BENCH_HARNESS=bench_spook
     CLYDE_O=$BENCH_DIR/$CLYDE-$ARCH.o
     SHADOW_O=$BENCH_DIR/$SHADOW-$ARCH.o
-    $CC $CFLAGS -march=$ARCH -c ../src/$CLYDE.c -o $CLYDE_O
-    $CC $CFLAGS -march=$ARCH -c ../src/$SHADOW.c -o $SHADOW_O
-    $CC $CFLAGS -march=$ARCH -c ../src/s1p.c -o $BENCH_DIR/s1p-$ARCH.o
-    $CC $CFLAGS -march=$ARCH -c ../src/encrypt.c -o $BENCH_DIR/encrypt-$ARCH.o
-    $CC $CFLAGS -march=$ARCH -I ../src -D N_ITER=$N_ITER -c src/$BENCH_HARNESS.c -o $BENCH_DIR/$BENCH_HARNESS-$ARCH.o
+    $CC $CFLAGS -march=$ARCH $DEFS -c ../src/$CLYDE.c -o $CLYDE_O
+    $CC $CFLAGS -march=$ARCH $DEFS -c ../src/$SHADOW.c -o $SHADOW_O
+    $CC $CFLAGS -march=$ARCH $DEFS -c ../src/s1p.c -o $BENCH_DIR/s1p-$ARCH.o
+    $CC $CFLAGS -march=$ARCH $DEFS -c ../src/encrypt.c -o $BENCH_DIR/encrypt-$ARCH.o
+    $CC $CFLAGS -march=$ARCH $DEFS -I ../src -D N_ITER=$N_ITER -c src/$BENCH_HARNESS.c -o $BENCH_DIR/$BENCH_HARNESS-$ARCH.o
     $CC $CFLAGS -march=$ARCH -flto $CLYDE_O $SHADOW_O $BENCH_DIR/s1p-$ARCH.o $BENCH_DIR/encrypt-$ARCH.o $BENCH_DIR/$BENCH_HARNESS-$ARCH.o -o $FULLNAME
     $FULLNAME > $FULLNAME.txt
 done

@@ -3,3 +3,5 @@
 /prim_bench_iaca/
 /prim_bench_real/
 /spook_bench/
+/submission/
+*.o
